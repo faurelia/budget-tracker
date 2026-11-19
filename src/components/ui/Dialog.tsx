@@ -48,7 +48,7 @@ export function Dialog({
         if (event.target === dialogRef.current) onClose()
       }}
       className={cn(
-        'm-auto w-[calc(100vw-2rem)] rounded-2xl border border-line bg-surface p-0 shadow-2xl',
+        'm-auto w-[calc(100vw-2rem)] rounded-[4px] border border-line bg-surface p-0 shadow-[0_30px_80px_-30px_rgb(9_16_12/0.55)]',
         size === 'sm' ? 'max-w-sm' : 'max-w-lg',
       )}
     >
@@ -56,11 +56,11 @@ export function Dialog({
         <div className="flex max-h-[85dvh] flex-col">
           <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
             <div>
-              <h2 id={titleId} className="text-base font-semibold text-ink">
+              <h2 id={titleId} className="text-[16px] font-semibold text-ink">
                 {title}
               </h2>
               {description ? (
-                <p className="mt-0.5 text-xs text-muted">{description}</p>
+                <p className="mt-1 text-[11.5px] leading-snug text-muted">{description}</p>
               ) : null}
             </div>
             <Button
@@ -74,7 +74,7 @@ export function Dialog({
           </div>
           <div className="overflow-y-auto px-5 py-4">{children}</div>
           {footer ? (
-            <div className="flex flex-wrap justify-end gap-2 border-t border-line px-5 py-3">
+            <div className="flex flex-wrap justify-end gap-2 border-t border-line bg-surface-2/40 px-5 py-3">
               {footer}
             </div>
           ) : null}
@@ -123,7 +123,7 @@ export function ConfirmDialog({
         </>
       }
     >
-      <p className="text-sm text-muted">{description}</p>
+      <p className="text-[13px] leading-relaxed text-muted">{description}</p>
     </Dialog>
   )
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { CategoryChip } from '../../components/CategoryChip'
+import { PageHeader } from '../../components/PageHeader'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { ConfirmDialog } from '../../components/ui/Dialog'
@@ -16,6 +17,7 @@ import {
 import { cn } from '../../lib/cn'
 import {
   compareISODate,
+  formatShortDate,
   formatTransactionDate,
   monthLabel,
 } from '../../lib/date'
@@ -49,7 +51,10 @@ export function TransactionsPage() {
 
   const currency = state.currency
   const categoriesById = useMemo(
-    () => new Map<string, Category>(state.categories.map((category) => [category.id, category])),
+    () =>
+      new Map<string, Category>(
+        state.categories.map((category) => [category.id, category]),
+      ),
     [state.categories],
   )
 
@@ -92,6 +97,7 @@ export function TransactionsPage() {
     (total, transaction) => total + transaction.amountCents,
     0,
   )
+  const hasRefunds = filtered.some((transaction) => transaction.amountCents < 0)
   const hasFilters = search.trim() !== '' || categoryFilter !== 'all'
 
   const openNew = () => {
@@ -112,11 +118,11 @@ export function TransactionsPage() {
   }
 
   const deleteDescription = deleting
-    ? `${deleting.note || categoriesById.get(deleting.categoryId)?.name || 'Transaction'} · ${formatMoney(deleting.amountCents, currency)} on ${formatTransactionDate(deleting.date)}. This cannot be undone.`
+    ? `${deleting.note || categoriesById.get(deleting.categoryId)?.name || 'Transaction'} for ${formatMoney(deleting.amountCents, currency)} on ${formatTransactionDate(deleting.date)}. This cannot be undone.`
     : ''
 
   const amountClass = (cents: number) =>
-    cn('tabular font-medium', cents < 0 && 'text-emerald-600 dark:text-emerald-400')
+    cn('money', cents < 0 ? 'text-brand' : 'text-ink')
 
   const actions = (transaction: Transaction) => (
     <div className="flex shrink-0 justify-end gap-0.5">
@@ -132,7 +138,7 @@ export function TransactionsPage() {
         variant="ghost"
         size="iconSm"
         aria-label={`Delete ${transaction.note || 'transaction'}`}
-        className="hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
+        className="hover:bg-danger-soft hover:text-danger"
         onClick={() => setDeleting(transaction)}
       >
         <TrashIcon size={14} />
@@ -140,66 +146,103 @@ export function TransactionsPage() {
     </div>
   )
 
+  const emptyMessage = (
+    <EmptyState
+      icon={<ReceiptIcon size={22} />}
+      title={
+        monthTransactions.length === 0
+          ? `Nothing logged in ${monthLabel(month)}`
+          : 'No matches'
+      }
+      description={
+        monthTransactions.length === 0
+          ? 'Add an expense, or use the month picker to look at another month.'
+          : 'Nothing in this month matches your filters.'
+      }
+      action={
+        monthTransactions.length === 0 ? (
+          <Button variant="primary" size="sm" onClick={openNew}>
+            <PlusIcon size={14} />
+            Add transaction
+          </Button>
+        ) : (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              setSearch('')
+              setCategoryFilter('all')
+            }}
+          >
+            Clear filters
+          </Button>
+        )
+      }
+    />
+  )
+
   return (
-    <div className="space-y-4">
-      <Card className="p-3">
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-          <div className="relative min-w-0 flex-1">
-            <SearchIcon
-              size={15}
-              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted"
-            />
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search notes, categories, dates"
-              aria-label="Search transactions"
-              className="pl-9"
-            />
-          </div>
-          <div className="flex gap-2">
-            <Select
-              aria-label="Filter by category"
-              value={categoryFilter}
-              onChange={(event) => setCategoryFilter(event.target.value)}
-              className="min-w-0 flex-1 lg:w-44"
-            >
-              <option value="all">All categories</option>
-              {state.categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.icon} {category.name}
-                </option>
-              ))}
-            </Select>
-            <Select
-              aria-label="Sort transactions"
-              value={sort}
-              onChange={(event) => setSort(event.target.value as SortKey)}
-              className="min-w-0 flex-1 lg:w-40"
-            >
-              {SORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <Button variant="primary" onClick={openNew} className="w-full lg:w-auto">
+    <div className="space-y-5">
+      <PageHeader
+        title="Transactions"
+        description={`Every expense in ${monthLabel(month)}.`}
+        actions={
+          <Button variant="primary" onClick={openNew}>
             <PlusIcon size={15} />
             Add transaction
           </Button>
-        </div>
-      </Card>
+        }
+      />
 
-      <div className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <h2 className="text-sm font-semibold">{monthLabel(month)}</h2>
-          <p className="text-xs text-muted">
-            {filtered.length} of {monthTransactions.length} transaction
-            {monthTransactions.length === 1 ? '' : 's'} · {formatMoney(filteredTotal, currency)}
-          </p>
+      <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
+        <div className="relative min-w-0 flex-1">
+          <SearchIcon
+            size={15}
+            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted"
+          />
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search notes, categories, dates"
+            aria-label="Search transactions"
+            className="pl-9"
+          />
         </div>
-        {hasFilters ? (
+        <div className="grid grid-cols-2 gap-2.5 max-[359px]:grid-cols-1 lg:flex">
+          <Select
+            aria-label="Filter by category"
+            value={categoryFilter}
+            onChange={(event) => setCategoryFilter(event.target.value)}
+            className="min-w-0 lg:w-44"
+          >
+            <option value="all">All categories</option>
+            {state.categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.icon} {category.name}
+              </option>
+            ))}
+          </Select>
+          <Select
+            aria-label="Sort transactions"
+            value={sort}
+            onChange={(event) => setSort(event.target.value as SortKey)}
+            className="min-w-0 lg:w-40"
+          >
+            {SORT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </div>
+
+      {hasFilters ? (
+        <div className="flex items-center justify-between gap-3 border-b border-line pb-2">
+          <p className="text-[11px] text-muted">
+            Showing {filtered.length} of {monthTransactions.length} for{' '}
+            {monthLabel(month)}.
+          </p>
           <Button
             variant="ghost"
             size="sm"
@@ -210,64 +253,37 @@ export function TransactionsPage() {
           >
             Clear filters
           </Button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       <Card className="overflow-hidden">
         {filtered.length === 0 ? (
-          monthTransactions.length === 0 ? (
-            <EmptyState
-              icon={<ReceiptIcon size={22} />}
-              title={`No transactions in ${monthLabel(month)}`}
-              description="Log an expense here, or use the month picker to look at a different month."
-              action={
-                <Button variant="primary" size="sm" onClick={openNew}>
-                  <PlusIcon size={14} />
-                  Add transaction
-                </Button>
-              }
-            />
-          ) : (
-            <EmptyState
-              icon={<SearchIcon size={22} />}
-              title="No matches"
-              description="Nothing in this month matches your filters."
-              action={
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    setSearch('')
-                    setCategoryFilter('all')
-                  }}
-                >
-                  Clear filters
-                </Button>
-              }
-            />
-          )
+          emptyMessage
         ) : (
           <>
             <div className="hidden md:block">
-              <table className="w-full text-left text-sm">
+              <table className="w-full text-left">
                 <caption className="sr-only">
                   Transactions for {monthLabel(month)}
                 </caption>
                 <thead>
-                  <tr className="border-b border-line text-[11px] tracking-wide text-muted uppercase">
-                    <th scope="col" className="px-4 py-2.5 font-medium">
+                  <tr className="border-b border-line bg-surface-2/50 text-[10.5px] font-semibold text-muted">
+                    <th scope="col" className="px-4 py-2.5 font-semibold">
                       Date
                     </th>
-                    <th scope="col" className="px-4 py-2.5 font-medium">
+                    <th scope="col" className="px-4 py-2.5 font-semibold">
                       Category
                     </th>
-                    <th scope="col" className="px-4 py-2.5 font-medium">
+                    <th scope="col" className="px-4 py-2.5 font-semibold">
                       Note
                     </th>
-                    <th scope="col" className="px-4 py-2.5 text-right font-medium">
+                    <th
+                      scope="col"
+                      className="px-4 py-2.5 text-right font-semibold"
+                    >
                       Amount
                     </th>
-                    <th scope="col" className="w-24 px-4 py-2.5">
+                    <th scope="col" className="w-20 px-2 py-2.5">
                       <span className="sr-only">Actions</span>
                     </th>
                   </tr>
@@ -276,24 +292,51 @@ export function TransactionsPage() {
                   {filtered.map((transaction) => (
                     <tr
                       key={transaction.id}
-                      className="border-b border-line/70 transition-colors last:border-0 hover:bg-surface-2/40"
+                      className="group border-b border-line/70 transition-colors last:border-0 hover:bg-surface-2/30"
                     >
-                      <td className="px-4 py-2.5 whitespace-nowrap text-muted">
+                      <td className="px-4 py-3 font-mono text-[10.5px] whitespace-nowrap text-muted">
                         {formatTransactionDate(transaction.date)}
                       </td>
-                      <td className="max-w-48 px-4 py-2.5">
-                        <CategoryChip category={categoriesById.get(transaction.categoryId)} />
+                      <td className="max-w-48 px-4 py-3">
+                        <CategoryChip
+                          category={categoriesById.get(transaction.categoryId)}
+                        />
                       </td>
-                      <td className="max-w-72 truncate px-4 py-2.5 text-muted">
+                      <td className="max-w-72 truncate px-4 py-3 text-[13px] text-muted">
                         {transaction.note || '—'}
                       </td>
-                      <td className={cn('px-4 py-2.5 text-right', amountClass(transaction.amountCents))}>
+                      <td
+                        className={cn(
+                          'px-4 py-3 text-right text-[13px] font-medium',
+                          amountClass(transaction.amountCents),
+                        )}
+                      >
                         {formatMoney(transaction.amountCents, currency)}
                       </td>
-                      <td className="px-2 py-1.5">{actions(transaction)}</td>
+                      <td className="px-2 py-2">
+                        <div className="opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
+                          {actions(transaction)}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
+                <tfoot>
+                  <tr className="border-t border-line bg-surface-2/30">
+                    <td
+                      colSpan={3}
+                      className="px-4 py-2.5 text-[10.5px] font-semibold text-muted"
+                    >
+                      {filtered.length}{' '}
+                      {filtered.length === 1 ? 'transaction' : 'transactions'},{' '}
+                      {hasRefunds ? 'net total' : 'total'}
+                    </td>
+                    <td className="money px-4 py-2.5 text-right text-[13px] font-medium">
+                      {formatMoney(filteredTotal, currency)}
+                    </td>
+                    <td />
+                  </tr>
+                </tfoot>
               </table>
             </div>
 
@@ -301,26 +344,43 @@ export function TransactionsPage() {
               {filtered.map((transaction) => {
                 const category = categoriesById.get(transaction.categoryId)
                 return (
-                  <li key={transaction.id} className="px-4 py-3">
-                    <div className="flex items-baseline justify-between gap-3">
-                      <p className="truncate text-sm font-medium">
-                        {transaction.note || category?.name || 'Transaction'}
-                      </p>
-                      <p className={cn('shrink-0 text-sm', amountClass(transaction.amountCents))}>
-                        {formatMoney(transaction.amountCents, currency)}
-                      </p>
+                  <li key={transaction.id} className="flex gap-3 px-4 py-3">
+                    <span className="w-10 shrink-0 pt-0.5 font-mono text-[10px] leading-tight text-muted">
+                      {formatShortDate(transaction.date)}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <p className="truncate text-[13px] font-medium">
+                          {transaction.note || category?.name || 'Transaction'}
+                        </p>
+                        <p
+                          className={cn(
+                            'shrink-0 text-[13px] font-medium',
+                            amountClass(transaction.amountCents),
+                          )}
+                        >
+                          {formatMoney(transaction.amountCents, currency)}
+                        </p>
+                      </div>
+                      <div className="mt-1 flex items-center justify-between gap-2">
+                        <CategoryChip category={category} />
+                        {actions(transaction)}
+                      </div>
                     </div>
-                    <div className="mt-1 flex items-center gap-2">
-                      <CategoryChip category={category} />
-                      <span className="text-[11px] text-muted">
-                        {formatTransactionDate(transaction.date)}
-                      </span>
-                    </div>
-                    <div className="mt-1 flex justify-end">{actions(transaction)}</div>
                   </li>
                 )
               })}
             </ul>
+            <div className="flex items-baseline justify-between gap-3 border-t border-line bg-surface-2/30 px-4 py-2.5 md:hidden">
+              <span className="text-[10.5px] font-semibold text-muted">
+                {filtered.length}{' '}
+                {filtered.length === 1 ? 'transaction' : 'transactions'},{' '}
+                {hasRefunds ? 'net total' : 'total'}
+              </span>
+              <span className="money text-[13px] font-medium">
+                {formatMoney(filteredTotal, currency)}
+              </span>
+            </div>
           </>
         )}
       </Card>

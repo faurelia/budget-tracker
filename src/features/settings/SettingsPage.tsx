@@ -1,12 +1,17 @@
 import { useMemo, useRef, useState, type ChangeEvent } from 'react'
+import { PageHeader } from '../../components/PageHeader'
 import { Button } from '../../components/ui/Button'
 import { Card, CardHeader } from '../../components/ui/Card'
 import { ConfirmDialog } from '../../components/ui/Dialog'
-import { Field, Select } from '../../components/ui/Field'
+import { Select } from '../../components/ui/Field'
 import { ThemeToggle } from '../../components/ui/ThemeToggle'
 import { useToast } from '../../components/ui/toastContext'
 import { DownloadIcon, UploadIcon } from '../../components/icons'
-import { parseTransactionsCSV, transactionsToCSV, type ImportPreview } from '../../lib/csv'
+import {
+  parseTransactionsCSV,
+  transactionsToCSV,
+  type ImportPreview,
+} from '../../lib/csv'
 import { compareISODate, todayISO } from '../../lib/date'
 import { downloadTextFile } from '../../lib/download'
 import { CURRENCIES } from '../../lib/money'
@@ -20,9 +25,10 @@ export function SettingsPage() {
   const toast = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [preview, setPreview] = useState<{ data: ImportPreview; fileName: string } | null>(
-    null,
-  )
+  const [preview, setPreview] = useState<{
+    data: ImportPreview
+    fileName: string
+  } | null>(null)
   const [importOpen, setImportOpen] = useState(false)
   const [resetOpen, setResetOpen] = useState(false)
 
@@ -85,18 +91,30 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      <PageHeader
+        title="Settings"
+        description="Preferences, categories, and your data."
+      />
+
       <Card>
         <CardHeader
           title="Preferences"
           description="Applies to this browser only."
         />
-        <div className="grid gap-4 border-t border-line px-4 py-4 sm:grid-cols-2">
-          <Field
-            label="Currency"
-            htmlFor="currency"
-            hint="Amounts are stored in minor units and displayed in this currency."
-          >
+        <div className="divide-y divide-line">
+          <div className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_260px] sm:items-center">
+            <div>
+              <label
+                htmlFor="currency"
+                className="text-[13px] font-medium text-ink"
+              >
+                Currency
+              </label>
+              <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                Amounts are stored in minor units and shown in this currency.
+              </p>
+            </div>
             <Select
               id="currency"
               value={state.currency}
@@ -107,26 +125,28 @@ export function SettingsPage() {
             >
               {CURRENCIES.map((currency) => (
                 <option key={currency.code} value={currency.code}>
-                  {currency.code} · {currency.label}
+                  {currency.label} ({currency.code})
                 </option>
               ))}
             </Select>
-          </Field>
+          </div>
 
-          <div className="space-y-1.5">
-            <p className="text-xs font-medium text-muted">Theme</p>
+          <div className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_260px] sm:items-center">
+            <div>
+              <p className="text-[13px] font-medium text-ink">Theme</p>
+              <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                System follows your operating system setting.
+              </p>
+            </div>
             <ThemeToggle showLabels />
-            <p className="text-xs text-muted">
-              “System” follows your operating system setting.
-            </p>
           </div>
         </div>
       </Card>
 
-      <Card className="overflow-hidden">
+      <Card>
         <CardHeader
           title="Categories"
-          description={`${state.categories.length} categories · used for budgets, chips, and charts`}
+          description={`${state.categories.length} categories used for limits, labels, and charts.`}
         />
         <CategoryManager />
       </Card>
@@ -134,19 +154,32 @@ export function SettingsPage() {
       <Card>
         <CardHeader
           title="Your data"
-          description={`${state.transactions.length} transactions saved locally in this browser`}
+          description={`${state.transactions.length} transactions saved in this browser.`}
         />
-        <div className="grid gap-5 border-t border-line px-4 py-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Backup and restore</p>
-            <p className="text-xs text-muted">
+        <div className="grid gap-6 px-5 py-5 sm:grid-cols-2 sm:divide-x sm:divide-line">
+          <div className="sm:pr-6">
+            <h3 className="text-[13px] font-semibold">Backup and restore</h3>
+            <p className="mt-1 text-[11.5px] leading-relaxed text-muted">
               Export every transaction as CSV, or import a bank export. The
-              tracker expects <code className="rounded bg-surface-2 px-1">date</code>,{' '}
-              <code className="rounded bg-surface-2 px-1">category</code>,{' '}
-              <code className="rounded bg-surface-2 px-1">amount</code>, and{' '}
-              <code className="rounded bg-surface-2 px-1">note</code> columns.
+              tracker expects{' '}
+              <code className="rounded-[2px] bg-surface-2 px-1 py-0.5 font-mono text-[10.5px] text-ink">
+                date
+              </code>
+              ,{' '}
+              <code className="rounded-[2px] bg-surface-2 px-1 py-0.5 font-mono text-[10.5px] text-ink">
+                category
+              </code>
+              ,{' '}
+              <code className="rounded-[2px] bg-surface-2 px-1 py-0.5 font-mono text-[10.5px] text-ink">
+                amount
+              </code>
+              , and{' '}
+              <code className="rounded-[2px] bg-surface-2 px-1 py-0.5 font-mono text-[10.5px] text-ink">
+                note
+              </code>{' '}
+              columns.
             </p>
-            <div className="flex flex-wrap gap-2 pt-1">
+            <div className="mt-3 flex flex-wrap gap-2">
               <Button size="sm" onClick={exportCsv}>
                 <DownloadIcon size={14} />
                 Export CSV
@@ -166,14 +199,14 @@ export function SettingsPage() {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Start over</p>
-            <p className="text-xs text-muted">
+          <div className="sm:pl-6">
+            <h3 className="text-[13px] font-semibold">Start over</h3>
+            <p className="mt-1 text-[11.5px] leading-relaxed text-muted">
               Deletes transactions and limits, and restores the default
               categories. Theme and currency stay as they are. This cannot be
               undone.
             </p>
-            <div className="pt-1">
+            <div className="mt-3">
               <Button
                 size="sm"
                 variant="dangerGhost"
@@ -184,10 +217,12 @@ export function SettingsPage() {
             </div>
           </div>
         </div>
-        <p className="border-t border-line px-4 py-3 text-[11px] text-muted">
+        <p className="border-t border-line px-5 py-3 text-[10.5px] leading-relaxed text-muted">
           Local-first: nothing leaves your browser. Data lives under{' '}
-          <code className="rounded bg-surface-2 px-1">{STORAGE_KEY}</code> in
-          localStorage, so clearing site data will erase it.
+          <code className="rounded-[2px] bg-surface-2 px-1 py-0.5 font-mono text-[10px] text-ink">
+            {STORAGE_KEY}
+          </code>{' '}
+          in localStorage, so clearing site data will erase it.
         </p>
       </Card>
 

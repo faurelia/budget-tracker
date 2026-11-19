@@ -2,45 +2,88 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Sum — a monthly ledger.
+ * Paper, ink, pine, oxblood, and one brass accent. The dark theme is a night
+ * ledger rather than a neon dashboard: green-black paper, mint actions, brass
+ * meters.
+ */
 :root {
-  --ui-canvas: #f4f6f9;
-  --ui-surface: #ffffff;
-  --ui-surface-2: #eef2f6;
-  --ui-ink: #0f1b2a;
-  --ui-muted: #5f7186;
-  --ui-line: #dde5ee;
+  --ui-canvas: #eef1ea;
+  --ui-surface: #fbfbf7;
+  --ui-surface-2: #e5eae1;
+  --ui-ink: #18211c;
+  --ui-muted: #5b6860;
+  --ui-line: #d2d8cf;
 
-  --ui-brand: #0f766e;
-  --ui-brand-hover: #115e59;
-  --ui-brand-ink: #ffffff;
-  --ui-brand-soft: #ccfbf1;
-  --ui-brand-soft-ink: #115e59;
+  --ui-brand: #125c4b;
+  --ui-brand-hover: #0d4a3c;
+  --ui-brand-ink: #f7faf4;
+  --ui-brand-soft: #dce9e1;
+  --ui-brand-soft-ink: #125c4b;
 
-  --ui-shadow: 0 1px 2px rgb(15 27 42 / 0.06), 0 8px 24px -16px rgb(15 27 42 / 0.25);
+  --ui-danger: #ae3a2a;
+  --ui-danger-ink: #ffffff;
+  --ui-danger-soft: #f4e2dd;
+
+  --ui-warn: #8a6414;
+  --ui-warn-soft: #f3e9d2;
+
+  --ui-brass: #b78d24;
+
+  --ui-plate: #1b2b24;
+  --ui-plate-ink: #f0f4ec;
+  --ui-plate-muted: #a3b5aa;
+  --ui-plate-line: #34473e;
+  --ui-plate-danger: #f0a392;
+
+  --ui-meter-tick: rgb(24 33 28 / 0.16);
+  --ui-meter-marker: var(--ui-ink);
+
+  --ui-overlay: rgb(10 17 13 / 0.6);
   color-scheme: light;
 }
 
 .dark {
-  --ui-canvas: #080d13;
-  --ui-surface: #0f1620;
-  --ui-surface-2: #18222f;
-  --ui-ink: #e7eef7;
-  --ui-muted: #93a4b8;
-  --ui-line: #223041;
+  --ui-canvas: #101613;
+  --ui-surface: #161f1a;
+  --ui-surface-2: #202b24;
+  --ui-ink: #e9eee7;
+  --ui-muted: #9aa89e;
+  --ui-line: #2d392f;
 
-  --ui-brand: #2dd4bf;
-  --ui-brand-hover: #5eead4;
-  --ui-brand-ink: #052e2b;
-  --ui-brand-soft: #103c37;
-  --ui-brand-soft-ink: #7ff2e3;
+  --ui-brand: #74c9ae;
+  --ui-brand-hover: #8ed8c1;
+  --ui-brand-ink: #0a2119;
+  --ui-brand-soft: #17392e;
+  --ui-brand-soft-ink: #a8e6d4;
 
-  --ui-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -24px rgb(0 0 0 / 0.7);
+  --ui-danger: #ec9382;
+  --ui-danger-ink: #2a120e;
+  --ui-danger-soft: #3a211d;
+
+  --ui-warn: #e0b665;
+  --ui-warn-soft: #332915;
+
+  --ui-brass: #dfc06a;
+
+  --ui-plate: #1b2822;
+  --ui-plate-ink: #f0f4ec;
+  --ui-plate-muted: #a3b5aa;
+  --ui-plate-line: #35483f;
+  --ui-plate-danger: #f2a493;
+
+  --ui-meter-tick: rgb(233 238 231 / 0.16);
+  --ui-meter-marker: var(--ui-plate-ink);
+
+  --ui-overlay: rgb(3 8 5 / 0.7);
   color-scheme: dark;
 }
 
 @theme inline {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+  --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --color-canvas: var(--ui-canvas);
   --color-surface: var(--ui-surface);
@@ -55,7 +98,20 @@
   --color-brand-soft: var(--ui-brand-soft);
   --color-brand-soft-ink: var(--ui-brand-soft-ink);
 
-  --shadow-card: var(--ui-shadow);
+  --color-danger: var(--ui-danger);
+  --color-danger-ink: var(--ui-danger-ink);
+  --color-danger-soft: var(--ui-danger-soft);
+
+  --color-warn: var(--ui-warn);
+  --color-warn-soft: var(--ui-warn-soft);
+
+  --color-brass: var(--ui-brass);
+
+  --color-plate: var(--ui-plate);
+  --color-plate-ink: var(--ui-plate-ink);
+  --color-plate-muted: var(--ui-plate-muted);
+  --color-plate-line: var(--ui-plate-line);
+  --color-plate-danger: var(--ui-plate-danger);
 }
 
 @layer base {
@@ -70,12 +126,22 @@
     background-color: var(--ui-canvas);
     color: var(--ui-ink);
     font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.55;
+    font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
   ::selection {
-    background: color-mix(in oklab, var(--ui-brand) 30%, transparent);
+    background: color-mix(in oklab, var(--ui-brass) 35%, transparent);
   }
 
   :focus-visible {
@@ -99,31 +165,90 @@
     appearance: none;
     margin: 0;
   }
+
+  code,
+  kbd {
+    font-family: var(--font-mono);
+  }
 }
 
 @utility tabular {
   font-variant-numeric: tabular-nums;
 }
 
+/* Figures in the ledger: money and dates only. */
+@utility money {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Dotted leader between a label and its figure, like a printed account. */
+@utility leader {
+  flex: 1 1 auto;
+  min-width: 1.25rem;
+  margin: 0 0.55rem 0.28em;
+  border-bottom: 1px dotted var(--ui-line);
+}
+
+/* Ticked budget meter. */
+.meter {
+  position: relative;
+}
+
+.meter-ticks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent calc(10% - 1px),
+    var(--ui-meter-tick) calc(10% - 1px),
+    var(--ui-meter-tick) 10%
+  );
+}
+
+.meter-marker {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--ui-meter-marker);
+  pointer-events: none;
+}
+
+.meter-marker::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-top: 4px solid var(--ui-meter-marker);
+  border-right: 3px solid transparent;
+  border-left: 3px solid transparent;
+}
+
 @keyframes page-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    transform: none;
   }
 }
 
 .page-enter {
-  animation: page-in 180ms ease-out;
+  animation: page-in 140ms ease-out;
 }
 
 @keyframes dialog-in {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(8px) scale(0.99);
   }
   to {
     opacity: 1;
@@ -132,11 +257,11 @@
 }
 
 dialog[open] {
-  animation: dialog-in 160ms ease-out;
+  animation: dialog-in 150ms ease-out;
 }
 
 dialog::backdrop {
-  background: rgb(3 7 12 / 0.55);
+  background: var(--ui-overlay);
   backdrop-filter: blur(2px);
 }
 

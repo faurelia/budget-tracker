@@ -2,16 +2,16 @@ import type { AppState, Category } from '../types'
 
 /** Palette offered when creating categories; also used for imported categories. */
 export const CATEGORY_PALETTE = [
-  '#6366f1',
-  '#10b981',
-  '#3b82f6',
-  '#f59e0b',
-  '#06b6d4',
-  '#ec4899',
-  '#a855f7',
-  '#f43f5e',
-  '#84cc16',
-  '#64748b',
+  '#2f6b57',
+  '#b07a2a',
+  '#a64b3c',
+  '#4a6b8a',
+  '#6e7f4e',
+  '#7a5470',
+  '#2f7c86',
+  '#b5903c',
+  '#8a5a3b',
+  '#5d6470',
 ] as const
 
 export const EMOJI_CHOICES = [
@@ -34,15 +34,15 @@ export const EMOJI_CHOICES = [
 ] as const
 
 const DEFAULT_CATEGORIES: Category[] = [
-  { id: 'housing', name: 'Housing', color: '#6366f1', icon: '🏠' },
-  { id: 'groceries', name: 'Groceries', color: '#10b981', icon: '🛒' },
-  { id: 'transport', name: 'Transport', color: '#3b82f6', icon: '🚗' },
-  { id: 'dining', name: 'Dining', color: '#f59e0b', icon: '🍽️' },
-  { id: 'utilities', name: 'Utilities', color: '#06b6d4', icon: '💡' },
-  { id: 'health', name: 'Health', color: '#ec4899', icon: '🩺' },
-  { id: 'entertainment', name: 'Entertainment', color: '#a855f7', icon: '🎬' },
-  { id: 'shopping', name: 'Shopping', color: '#f43f5e', icon: '🛍️' },
-  { id: 'other', name: 'Other', color: '#64748b', icon: '📦' },
+  { id: 'housing', name: 'Housing', color: '#4a6b8a', icon: '🏠' },
+  { id: 'groceries', name: 'Groceries', color: '#2f6b57', icon: '🛒' },
+  { id: 'transport', name: 'Transport', color: '#2f7c86', icon: '🚗' },
+  { id: 'dining', name: 'Dining', color: '#b07a2a', icon: '🍽️' },
+  { id: 'utilities', name: 'Utilities', color: '#b5903c', icon: '💡' },
+  { id: 'health', name: 'Health', color: '#a64b3c', icon: '🩺' },
+  { id: 'entertainment', name: 'Entertainment', color: '#7a5470', icon: '🎬' },
+  { id: 'shopping', name: 'Shopping', color: '#8a5a3b', icon: '🛍️' },
+  { id: 'other', name: 'Other', color: '#5d6470', icon: '📦' },
 ]
 
 export function createSeedCategories(): Category[] {

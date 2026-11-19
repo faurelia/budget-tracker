@@ -20,7 +20,7 @@ export function ThemeToggle({ showLabels = false }: { showLabels?: boolean }) {
     <div
       role="group"
       aria-label="Theme"
-      className="inline-flex rounded-xl border border-line bg-surface-2/60 p-1"
+      className="inline-flex rounded-[3px] border border-line bg-surface-2/70 p-0.5"
     >
       {OPTIONS.map(({ value, label, Icon }) => {
         const active = state.theme === value
@@ -31,10 +31,8 @@ export function ThemeToggle({ showLabels = false }: { showLabels?: boolean }) {
             aria-pressed={active}
             onClick={() => dispatch({ type: 'theme/set', theme: value })}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors',
-              active
-                ? 'bg-surface text-ink shadow-sm'
-                : 'text-muted hover:text-ink',
+              'inline-flex items-center gap-1.5 rounded-[2px] px-2.5 py-1.5 text-[11px] font-medium transition-colors',
+              active ? 'bg-surface text-ink' : 'text-muted hover:text-ink',
             )}
           >
             <Icon size={14} />
@@ -65,9 +63,9 @@ export function ThemeCycleButton() {
       onClick={() => dispatch({ type: 'theme/set', theme: next })}
       title={`${label} — switch to ${next}`}
       aria-label={`${label}. Switch to ${next} theme.`}
-      className="grid size-9 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:bg-surface-2 hover:text-ink"
+      className="grid size-8 place-items-center rounded-[3px] border border-line bg-surface text-muted transition-colors hover:bg-surface-2 hover:text-ink"
     >
-      <Icon size={16} />
+      <Icon size={15} />
     </button>
   )
 }

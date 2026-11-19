@@ -107,15 +107,21 @@ function TransactionForm({
           htmlFor="transaction-amount"
           hint={`${symbol} Use a minus sign for refunds.`}
         >
-          <Input
-            id="transaction-amount"
-            inputMode="decimal"
-            placeholder="0.00"
-            value={amount}
-            onChange={(event) => setAmount(event.target.value)}
-            data-autofocus
-            aria-invalid={error?.fieldId === 'transaction-amount'}
-          />
+          <div className="relative">
+            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[12px] text-muted">
+              {symbol}
+            </span>
+            <Input
+              id="transaction-amount"
+              inputMode="decimal"
+              placeholder="0.00"
+              value={amount}
+              onChange={(event) => setAmount(event.target.value)}
+              data-autofocus
+              aria-invalid={error?.fieldId === 'transaction-amount'}
+              className="money h-10 pr-3 pl-8 text-[15px] font-medium"
+            />
+          </div>
         </Field>
       </div>
 
@@ -149,19 +155,19 @@ function TransactionForm({
       </Field>
 
       {transaction ? (
-        <p className="rounded-lg bg-surface-2/70 px-3 py-2 text-xs text-muted">
+        <p className="rounded-[3px] border border-line bg-surface-2/50 px-3 py-2 text-[11px] text-muted">
           Currently {formatMoney(transaction.amountCents, state.currency)}. Editing
           keeps the same transaction id.
         </p>
       ) : null}
 
       {error ? (
-        <p className="text-xs text-red-600 dark:text-red-400" role="alert">
+        <p className="text-[11px] text-danger" role="alert">
           {error.message}
         </p>
       ) : null}
 
-      <div className="flex justify-end gap-2 pt-1">
+      <div className="flex justify-end gap-2 border-t border-line pt-4">
         <Button onClick={onDone}>Cancel</Button>
         <Button type="submit" variant="primary">
           {transaction ? 'Save changes' : 'Add transaction'}

@@ -8,13 +8,13 @@ interface MonthPickerProps {
 }
 
 const buttonClass =
-  'grid size-8 place-items-center rounded-lg text-muted transition-colors hover:bg-surface-2 hover:text-ink'
+  'grid size-8 place-items-center text-muted transition-colors hover:bg-surface-2 hover:text-ink'
 
 export function MonthPicker({ month, onChange }: MonthPickerProps) {
   const isCurrent = isCurrentMonth(month)
 
   return (
-    <div className="flex items-center gap-0.5 rounded-xl border border-line bg-surface p-1 shadow-card">
+    <div className="flex items-center rounded-[3px] border border-line bg-surface">
       <button
         type="button"
         aria-label="Previous month"
@@ -27,7 +27,7 @@ export function MonthPicker({ month, onChange }: MonthPickerProps) {
         type="button"
         onClick={() => onChange(currentMonthKey())}
         title={isCurrent ? 'Current month' : 'Jump to current month'}
-        className="min-w-[8.25rem] rounded-lg px-1 py-1 text-center text-sm font-semibold tabular text-ink transition-colors hover:text-brand"
+        className="min-w-[7.5rem] border-x border-line px-1 py-1.5 text-center text-[12px] font-semibold text-ink transition-colors hover:text-brand sm:min-w-[8.25rem]"
       >
         {monthLabel(month)}
       </button>

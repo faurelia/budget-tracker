@@ -10,9 +10,9 @@ interface Toast {
 }
 
 const TONE_STYLES: Record<ToastTone, string> = {
-  success: 'text-emerald-600 dark:text-emerald-400',
-  error: 'text-red-600 dark:text-red-400',
-  info: 'text-brand',
+  success: 'border-l-brand text-brand',
+  error: 'border-l-danger text-danger',
+  info: 'border-l-brass text-brass',
 }
 
 function ToneIcon({ tone }: { tone: ToastTone }) {
@@ -71,9 +71,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm shadow-card"
+            className={cn(
+              'pointer-events-auto flex w-full max-w-sm items-start gap-2.5 rounded-[3px] border border-l-2 border-line bg-surface px-3.5 py-2.5 text-[13px] shadow-[0_18px_40px_-24px_rgb(24_33_28/0.4)]',
+              TONE_STYLES[toast.tone],
+            )}
           >
-            <span className={cn('mt-0.5 shrink-0', TONE_STYLES[toast.tone])}>
+            <span className="mt-0.5 shrink-0">
               <ToneIcon tone={toast.tone} />
             </span>
             <p className="flex-1 text-ink">{toast.message}</p>
@@ -81,7 +84,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               type="button"
               onClick={() => dismiss(toast.id)}
               aria-label="Dismiss notification"
-              className="shrink-0 rounded text-muted transition hover:text-ink"
+              className="shrink-0 rounded-[2px] text-muted transition hover:text-ink"
             >
               <XIcon size={14} />
             </button>

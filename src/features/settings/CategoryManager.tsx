@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react'
-import { CategoryAvatar } from '../../components/CategoryChip'
 import { Button } from '../../components/ui/Button'
 import { ConfirmDialog } from '../../components/ui/Dialog'
 import { Field, Input } from '../../components/ui/Field'
@@ -61,7 +60,7 @@ function CategoryRow({ category }: { category: Category }) {
   }
 
   return (
-    <li className="flex flex-wrap items-center gap-2 px-4 py-2.5">
+    <li className="flex flex-wrap items-center gap-x-2 gap-y-2 px-5 py-2.5">
       <input
         value={category.icon}
         onChange={(event) => update({ icon: event.target.value.slice(0, 4) })}
@@ -70,7 +69,7 @@ function CategoryRow({ category }: { category: Category }) {
         }}
         maxLength={4}
         aria-label={`Icon for ${category.name}`}
-        className="h-9 w-11 rounded-lg border border-line bg-surface-2/50 text-center text-base outline-none transition focus:border-brand"
+        className="h-8 w-10 rounded-[3px] border border-line bg-surface-2/50 text-center text-sm outline-none transition focus:border-brand"
       />
       <Input
         value={name}
@@ -83,10 +82,10 @@ function CategoryRow({ category }: { category: Category }) {
           }
         }}
         aria-label={`Name for ${category.name}`}
-        className="h-9 min-w-0 flex-1 sm:max-w-52"
+        className="h-8 min-w-0 flex-1 sm:max-w-52"
       />
 
-      <div className="flex items-center gap-1.5">
+      <div className="order-last flex w-full items-center gap-0.5 sm:order-none sm:ml-1 sm:w-auto">
         {CATEGORY_PALETTE.slice(0, 6).map((color) => (
           <button
             key={color}
@@ -94,16 +93,20 @@ function CategoryRow({ category }: { category: Category }) {
             aria-label={`Use ${color} for ${category.name}`}
             aria-pressed={category.color === color}
             onClick={() => update({ color })}
-            className={cn(
-              'size-4 rounded-full border border-black/10 transition dark:border-white/20',
-              category.color === color &&
-                'ring-2 ring-ink ring-offset-2 ring-offset-surface',
-            )}
-            style={{ backgroundColor: color }}
-          />
+            className="grid size-6 place-items-center rounded-full transition hover:bg-surface-2"
+          >
+            <span
+              className={cn(
+                'size-3.5 rounded-full border border-black/10 transition dark:border-white/20',
+                category.color === color &&
+                  'ring-2 ring-ink ring-offset-2 ring-offset-surface',
+              )}
+              style={{ backgroundColor: color }}
+            />
+          </button>
         ))}
         <label
-          className="relative ml-0.5 grid size-5 cursor-pointer place-items-center rounded-full border border-dashed border-line"
+          className="relative grid size-6 cursor-pointer place-items-center rounded-full transition hover:bg-surface-2"
           title="Custom color"
         >
           <input
@@ -113,14 +116,16 @@ function CategoryRow({ category }: { category: Category }) {
             aria-label={`Custom color for ${category.name}`}
             className="absolute inset-0 size-full cursor-pointer opacity-0"
           />
-          <span
-            className="size-3 rounded-full"
-            style={{ backgroundColor: category.color }}
-          />
+          <span className="grid size-4 place-items-center rounded-full border border-dashed border-line">
+            <span
+              className="size-2.5 rounded-full"
+              style={{ backgroundColor: category.color }}
+            />
+          </span>
         </label>
       </div>
 
-      <span className="ml-auto text-[11px] tabular text-muted">
+      <span className="money ml-auto text-[10px] text-muted">
         {transactionCount} tx
       </span>
       <Button
@@ -129,7 +134,7 @@ function CategoryRow({ category }: { category: Category }) {
         aria-label={`Delete ${category.name}`}
         disabled={state.categories.length <= 1}
         onClick={() => setConfirmOpen(true)}
-        className="hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
+        className="hover:bg-danger-soft hover:text-danger"
       >
         <TrashIcon size={14} />
       </Button>
@@ -191,7 +196,7 @@ function AddCategoryForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-3 border-t border-line px-4 py-4"
+      className="space-y-3 border-t border-line bg-surface-2/25 px-5 py-4"
     >
       <div className="flex flex-wrap items-end gap-2">
         <Field label="Icon" className="w-16">
@@ -200,7 +205,7 @@ function AddCategoryForm() {
             onChange={(event) => setIcon(event.target.value.slice(0, 4))}
             maxLength={4}
             aria-label="New category icon"
-            className="h-9 text-center"
+            className="text-center"
           />
         </Field>
         <Field label="New category" className="min-w-40 flex-1">
@@ -209,17 +214,16 @@ function AddCategoryForm() {
             onChange={(event) => setName(event.target.value)}
             placeholder="e.g. Travel"
             aria-label="New category name"
-            className="h-9"
           />
         </Field>
-        <Button type="submit" variant="primary" size="sm" className="mb-0.5">
+        <Button type="submit" variant="primary" className="mb-0.5">
           <PlusIcon size={14} />
           Add category
         </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-1">
-        <span className="mr-1 text-[11px] text-muted">Emoji</span>
+        <span className="mr-1 text-[10.5px] text-muted">Icon</span>
         {EMOJI_CHOICES.map((emoji) => (
           <button
             key={emoji}
@@ -228,7 +232,7 @@ function AddCategoryForm() {
             aria-pressed={icon === emoji}
             onClick={() => setIcon(emoji)}
             className={cn(
-              'grid size-7 place-items-center rounded-lg text-sm transition hover:bg-surface-2',
+              'grid size-7 place-items-center rounded-[2px] text-sm transition hover:bg-surface-2',
               icon === emoji && 'bg-brand-soft',
             )}
           >
@@ -238,7 +242,7 @@ function AddCategoryForm() {
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
-        <span className="mr-1 text-[11px] text-muted">Color</span>
+        <span className="mr-1 text-[10.5px] text-muted">Color</span>
         {CATEGORY_PALETTE.map((swatch) => (
           <button
             key={swatch}
@@ -246,12 +250,17 @@ function AddCategoryForm() {
             aria-label={`Use ${swatch}`}
             aria-pressed={color === swatch}
             onClick={() => setColor(swatch)}
-            className={cn(
-              'size-5 rounded-full border border-black/10 transition dark:border-white/20',
-              color === swatch && 'ring-2 ring-ink ring-offset-2 ring-offset-surface',
-            )}
-            style={{ backgroundColor: swatch }}
-          />
+            className="grid size-6 place-items-center rounded-full transition hover:bg-surface-2"
+          >
+            <span
+              className={cn(
+                'size-4 rounded-full border border-black/10 transition dark:border-white/20',
+                color === swatch &&
+                  'ring-2 ring-ink ring-offset-2 ring-offset-surface',
+              )}
+              style={{ backgroundColor: swatch }}
+            />
+          </button>
         ))}
       </div>
     </form>
@@ -260,18 +269,14 @@ function AddCategoryForm() {
 
 export function CategoryManager() {
   const { state } = useBudget()
-  const firstCategory = state.categories[0]
 
   return (
     <div>
-      <div className="flex items-center gap-2 border-t border-line px-4 py-3">
-        {firstCategory ? <CategoryAvatar category={firstCategory} /> : null}
-        <p className="text-xs text-muted">
-          Rename, recolor, or remove categories. Deleting one moves its transactions
-          to another category.
-        </p>
-      </div>
-      <ul className="divide-y divide-line border-t border-line">
+      <p className="border-b border-line px-5 py-2.5 text-[10.5px] leading-relaxed text-muted">
+        Rename, recolor, or remove categories. Deleting one moves its
+        transactions to another category.
+      </p>
+      <ul className="divide-y divide-line">
         {state.categories.map((category) => (
           <CategoryRow key={category.id} category={category} />
         ))}

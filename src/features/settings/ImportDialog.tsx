@@ -114,54 +114,52 @@ export function ImportDialog({ open, fileName, preview, onClose }: ImportDialogP
       }
     >
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-xl bg-surface-2/60 px-2 py-2">
-            <p className="text-lg font-semibold tabular text-ink">
+        <div className="grid grid-cols-3 divide-x divide-line border border-line">
+          <div className="px-3 py-3 text-center">
+            <p className="money text-lg leading-none font-medium text-ink">
               {preview.rows.length}
             </p>
-            <p className="text-[11px] text-muted">Ready</p>
+            <p className="mt-1 text-[10.5px] text-muted">Ready</p>
           </div>
-          <div className="rounded-xl bg-surface-2/60 px-2 py-2">
-            <p className="text-lg font-semibold tabular text-ink">
+          <div className="px-3 py-3 text-center">
+            <p className="money text-lg leading-none font-medium text-ink">
               {preview.skippedIncome}
             </p>
-            <p className="text-[11px] text-muted">Income skipped</p>
+            <p className="mt-1 text-[10.5px] text-muted">Income skipped</p>
           </div>
-          <div className="rounded-xl bg-surface-2/60 px-2 py-2">
+          <div className="px-3 py-3 text-center">
             <p
               className={cn(
-                'text-lg font-semibold tabular',
-                preview.errors.length > 0
-                  ? 'text-red-600 dark:text-red-400'
-                  : 'text-ink',
+                'money text-lg leading-none font-medium',
+                preview.errors.length > 0 ? 'text-danger' : 'text-ink',
               )}
             >
               {preview.errors.length}
             </p>
-            <p className="text-[11px] text-muted">Errors</p>
+            <p className="mt-1 text-[10.5px] text-muted">Errors</p>
           </div>
         </div>
 
         {preview.skippedIncome > 0 ? (
-          <p className="rounded-lg bg-surface-2/50 px-3 py-2 text-xs text-muted">
-            Rows marked as income or credit were left out — this tracker records
+          <p className="bg-surface-2/50 px-3 py-2 text-[11px] leading-relaxed text-muted">
+            Rows marked as income or credit were left out. This tracker records
             expenses only. Refund rows with a negative amount can be imported.
           </p>
         ) : null}
 
         {missingCategories.length > 0 ? (
           <div className="space-y-2">
-            <label className="flex items-start gap-2 rounded-lg border border-line bg-surface-2/40 px-3 py-2">
+            <label className="flex items-start gap-2 border border-line bg-surface-2/40 px-3 py-2">
               <input
                 type="checkbox"
                 checked={createMissing}
                 onChange={(event) => setCreateMissing(event.target.checked)}
                 className="mt-0.5 size-4 accent-[var(--ui-brand)]"
               />
-              <span className="text-xs text-ink">
+              <span className="text-[11.5px] text-ink">
                 Create {missingCategories.length} missing{' '}
                 {missingCategories.length === 1 ? 'category' : 'categories'}
-                <span className="mt-0.5 block text-[11px] text-muted">
+                <span className="mt-0.5 block text-[10.5px] text-muted">
                   Otherwise these rows land in “Other”.
                 </span>
               </span>
@@ -180,12 +178,12 @@ export function ImportDialog({ open, fileName, preview, onClose }: ImportDialogP
         ) : null}
 
         {preview.errors.length > 0 ? (
-          <div className="rounded-lg border border-red-500/30 bg-red-500/5 px-3 py-2">
-            <p className="text-xs font-medium text-red-700 dark:text-red-400">
+          <div className="border border-danger/30 bg-danger-soft/60 px-3 py-2">
+            <p className="text-[11px] font-semibold text-danger">
               {preview.errors.length} row
               {preview.errors.length === 1 ? '' : 's'} will be skipped
             </p>
-            <ul className="mt-1 space-y-0.5 text-[11px] text-red-700/80 dark:text-red-300/80">
+            <ul className="mt-1 space-y-0.5 text-[10.5px] text-danger/85">
               {preview.errors.slice(0, 5).map((error) => (
                 <li key={`${error.line}-${error.message}`}>
                   Row {error.line}: {error.message}
@@ -193,7 +191,7 @@ export function ImportDialog({ open, fileName, preview, onClose }: ImportDialogP
               ))}
             </ul>
             {preview.errors.length > 5 ? (
-              <p className="mt-1 text-[11px] text-muted">
+              <p className="mt-1 text-[10.5px] text-muted">
                 and {preview.errors.length - 5} more.
               </p>
             ) : null}

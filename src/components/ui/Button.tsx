@@ -7,21 +7,21 @@ export type ButtonSize = 'sm' | 'md' | 'icon' | 'iconSm'
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-brand text-brand-ink hover:bg-brand-hover',
   secondary:
-    'border border-line bg-surface text-ink hover:bg-surface-2 active:bg-surface-2',
+    'border border-line bg-surface text-ink hover:border-ink/25 hover:bg-surface-2',
   ghost: 'text-muted hover:bg-surface-2 hover:text-ink',
-  danger: 'bg-red-600 text-white hover:bg-red-500',
-  dangerGhost: 'text-red-600 hover:bg-red-500/10 dark:text-red-400',
+  danger: 'bg-danger text-danger-ink hover:bg-danger/90',
+  dangerGhost: 'text-danger hover:bg-danger-soft',
 }
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-xs',
-  md: 'h-9 px-3.5 text-sm',
+  sm: 'h-8 px-2.5 text-xs',
+  md: 'h-9 px-3.5 text-[13px]',
   icon: 'size-9',
   iconSm: 'size-8',
 }
 
 const BASE =
-  'inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex shrink-0 items-center justify-center gap-1.5 rounded-[3px] font-medium transition-colors disabled:pointer-events-none disabled:opacity-50'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
